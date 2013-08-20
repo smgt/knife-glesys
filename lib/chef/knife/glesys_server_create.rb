@@ -8,8 +8,6 @@ class Chef
 
       banner "knife glesys server create (options)"
 
-      attr_reader :server
-
       deps do
         require 'fog'
         require 'readline'
@@ -140,21 +138,7 @@ class Chef
         @server = connection.servers.create default_server
 
         # Show information about the new server
-        msg_pair("Server ID", @server.serverid)
-        msg_pair("State", ui.color(color_state(@server.state),:bold))
-        msg_pair("Hostname", @server.hostname)
-        msg_pair("Description", @server.description)
-        puts "\n"
-        msg_pair("IPv4", @server.iplist.select{|i| i["version"] == 4}.collect{|i| i["ipaddress"]}.join(", "))
-        msg_pair("IPv6", @server.iplist.select{|i| i["version"] == 6}.collect{|i| i["ipaddress"]}.join(", "))
-        puts "\n"
-        msg_pair("CPU Cores", @server.cpucores)
-        msg_pair("Memory", "#{@server.memorysize} MB")
-        msg_pair("Disk", "#{@server.disksize} GB")
-        puts "\n"
-        msg_pair("Image", @server.templatename)
-        msg_pair("Platform", @server.platform)
-        msg_pair("Datacenter", @server.datacenter)
+        print_server_info
 
         # Waiting for server to boot
         print "\nBooting"
@@ -166,22 +150,8 @@ class Chef
         # Bootstrap the node
         bootstrap_for_node(@server,@server.public_ip_address).run
 
-        msg_pair("Server ID", @server.serverid)
-        msg_pair("State", ui.color(color_state(@server.state),:bold))
-        msg_pair("Hostname", @server.hostname)
-        msg_pair("Description", @server.description)
-        puts "\n"
-        msg_pair("IPv4", @server.iplist.select{|i| i["version"] == 4}.collect{|i| i["ipaddress"]}.join(", "))
-        msg_pair("IPv6", @server.iplist.select{|i| i["version"] == 6}.collect{|i| i["ipaddress"]}.join(", "))
-        puts "\n"
-        msg_pair("CPU Cores", @server.cpucores)
-        msg_pair("Memory", "#{@server.memorysize} MB")
-        msg_pair("Disk", "#{@server.disksize} GB")
-        puts "\n"
-        msg_pair("Image", @server.templatename)
-        msg_pair("Platform", @server.platform)
-        msg_pair("Datacenter", @server.datacenter)
-        puts "\n"
+        print_server_info
+
         msg_pair("Environment", config[:environment] || '_default')
         msg_pair("Run List", (config[:run_list] || []).join(', '))
         msg_pair("JSON Attributes", config[:json_attributes]) unless !config[:json_attributes] || config[:json_attributes].empty?
