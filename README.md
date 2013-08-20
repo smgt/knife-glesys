@@ -43,7 +43,7 @@ $ knife glesys server create (options)
 To create a OpenVZ Debian server in Stockholm you run this command (This will also provision the host with the `db` role):
 
 ```bash
-$ knife glesys server create --template "Debian 6.0 64-bit" --platform "OpenVZ" --data-center "Stockholm" \
+$ knife glesys server create --image "Debian 6.0 64-bit" --platform "OpenVZ" --data-center "Stockholm" \
   --cpu-cores 1 --memory-size 128 --transfer 50 -N database --run-list 'role[:db]' \
   --hostname "data.example.com" --root-password 'passw0rd' --description "Redis database server"
 ```
